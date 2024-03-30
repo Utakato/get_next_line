@@ -1,5 +1,14 @@
-// read, malloc, free
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fschipor <fschipor@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/30 17:20:55 by fschipor          #+#    #+#             */
+/*   Updated: 2024/03/30 22:14:40 by fschipor         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
@@ -7,10 +16,15 @@
 #  define BUFFER_SIZE 1
 # endif
 
-# include <stdlib.h>
 # include <stdio.h>
+# include <stdlib.h>
 # include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
-char *get_next_line(int fd);
+char	*get_next_line(int fd);
+int	str_len(char *str);
+char * ft_strjoin(char *s1, char *s2);
 
 #endif
