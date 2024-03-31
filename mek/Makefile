@@ -3,9 +3,9 @@ SOURCES = test.c ../get_next_line.c ../get_next_line_utils.c ../get_next_line.h
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -fsanitize=address -Wall -Wextra -Werror
 
-NAME = get_next_line
+NAME = test
 
 all: $(NAME)
 
@@ -15,4 +15,15 @@ $(NAME): $(SOURCES)
 
 run: $(NAME)
 	@echo "Running... \n"
-	@./a.out
+	@./test
+
+clean: 
+	@echo "Cleaning..."
+	@rm -rf test
+	
+
+# test: $(SOURCES)
+# 	@echo "Compiling..."
+# 	@$(CC) $(CFLAGS) -g $(SOURCES)
+# 	@echo "Running... \n"
+# 	@./a.out

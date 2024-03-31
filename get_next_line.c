@@ -6,86 +6,95 @@
 /*   By: fschipor <fschipor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 17:20:38 by fschipor          #+#    #+#             */
-/*   Updated: 2024/03/31 14:57:40 by fschipor         ###   ########.fr       */
+/*   Updated: 2024/03/31 23:00:31 by fschipor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	copy_buffer(char *tmp_read, char *read_buffer,
-			int *encountered_newline);
-char	*add_tmp_to_line(char *line, char *tmp_read);
+void	*handle_new_line(char *line, char *read_buffer);
+int		non_null_char_index(char *str);
 
 char	*get_next_line(int fd)
 {
 	static char	read_buffer[BUFFER_SIZE + 1];
-	char		*line;
-	int			encountered_newline;
 	int			bytes_read;
-	int reached_eof;
+	char		*line;
+	char		*tmp_line;
 
-	if (fd < 0 || BUFFER_SIZE < 1)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) == -1)
 		return (NULL);
-
-	reached_eof = 0;
-	bytes_read = 0;
-	encountered_newline = 0;
-
-	line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	bytes_read = 1;
+	line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (line == NULL)
-		return ( NULL);
-	while (reached_eof != 1)
+		return (NULL);
+	while (bytes_read > 0)
 	{
-		bytes_read = read(fd, read_buffer, BUFFER_SIZE);
-		
-		read_buffer[bytes_read] = 0;
 
-		add_tmp_to_line(line, read_buffer);
-		if (line == NULL)
-			return ( NULL);
-		if (encountered_newline == 1)
-			break ;
-		if (bytes_read < BUFFER_SIZE)
+		if (non_null_char_index(read_buffer) == BUFFER_SIZE)
 		{
-			reached_eof = 1;
-			if (bytes_read == 0)
-				return (NULL);
+			bytes_read = read(fd, read_buffer, BUFFER_SIZE);
+			read_buffer[bytes_read] = '\0';
+			if (bytes_read < 1)
+				break ;
 		}
+		tmp_line = ft_strjoin(line, read_buffer + non_null_char_index(read_buffer));
+		if (tmp_line == NULL)
+			return (NULL);
+		free(line);
+		line = tmp_line;
+		if (ft_strchr(line, '\n') != -1)
+			break;
+
 	}
-
+	if (line[0] == '\0')
+	{
+		if (line != NULL)
+			free(line);
+		return (NULL);
+	}
 	return (line);
 }
 
-char	*add_tmp_to_line(char *line, char *tmp_read)
+// handle new-line case
+void	*handle_new_line(char *line, char *read_buffer)
 {
+	int		i;
 	char	*new_line;
-	new_line = ft_strjoin(line, tmp_read);
-	// printf("new_line: %s \n", new_line);
+
+	i = ft_strchr(read_buffer, '\n');
+	read_buffer = read_buffer + i;
+	new_line = malloc(sizeof(char) * (i + 1));
 	if (new_line == NULL)
-		return (free(line), free(tmp_read), NULL);
-	free(line);
-	line = malloc(sizeof(char) * (str_len(new_line) + 1));
-	if (line == NULL)
-		return (free(new_line), free(tmp_read), NULL);
-	ft_strlcpy(line, new_line, str_len(new_line) + 1);
-	free(new_line);
+		return (NULL);
+	ft_strlcpy(new_line, read_buffer, i + 1);
+	line = ft_strjoin(line, new_line);
 	return (line);
 }
 
-void	copy_buffer(char *tmp_read, char *read_buffer, int *encountered_newline)
+int	ft_strchr(char *s, char c)
 {
 	int	i;
 
 	i = 0;
-	while (i < BUFFER_SIZE && read_buffer[i] != '\0')
+
+	while (i < str_len(s))
 	{
-		tmp_read[i] = read_buffer[i];
-		if (read_buffer[i] == '\n')
-		{
-			*encountered_newline = 1;
-			break ;
-		}
+		if (s[i] == c)
+			return (i);
 		i++;
 	}
+	return (-1);
 }
 
+int	non_null_char_index(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (i < BUFFER_SIZE && str[i] == '\0')
+	{
+		i++;
+	}
+	return (i);
+}
