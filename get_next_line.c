@@ -6,65 +6,87 @@
 /*   By: fschipor <fschipor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 17:20:38 by fschipor          #+#    #+#             */
-/*   Updated: 2024/03/30 22:16:12 by fschipor         ###   ########.fr       */
+/*   Updated: 2024/03/31 14:57:40 by fschipor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		str_len(char *str);
-int		fill_nulls(char *str, int size);
+void	copy_buffer(char *tmp_read, char *read_buffer,
+			int *encountered_newline);
+char	*add_tmp_to_line(char *line, char *tmp_read);
 
 char	*get_next_line(int fd)
 {
 	static char	read_buffer[BUFFER_SIZE];
-	char		*tmp_line_buffer;
+	char		*tmp_read;
 	char		*line;
-	int			read_size;
-	int			i;
+	int			encountered_newline;
+	int			bytes_read;
 
-	i = 0;
-	line = (char *)malloc((sizeof(char) * BUFFER_SIZE) + sizeof(char));
-	tmp_line_buffer = (char *)malloc((sizeof(char) * BUFFER_SIZE) + sizeof(char));
-	while (read(fd, read_buffer, BUFFER_SIZE) > 0 && read_buffer[0] != '\n')
+	if (fd < 0 || BUFFER_SIZE < 1)
+		return (NULL);
+	bytes_read = 0;
+	encountered_newline = 0;
+	tmp_read = ft_calloc((BUFFER_SIZE), sizeof(char));
+	if (tmp_read == NULL)
+		return ((NULL));
+	line = malloc(sizeof(char) * (BUFFER_SIZE));
+	if (line == NULL)
+		return (free(tmp_read), NULL);
+	while (bytes_read != -1)
 	{
-		while (i < BUFFER_SIZE && read_buffer[i] != '\n')
+		bytes_read = read(fd, read_buffer, BUFFER_SIZE);
+		if (bytes_read == 0)
 		{
-			tmp_line_buffer[i] = read_buffer[i];
-			i++;
+			bytes_read = -1;
+			break ;
 		}
-		tmp_line_buffer = read_buffer[0];
-		i++;
-		printf("read_buffer: %s\n", read_buffer);
+		copy_buffer(tmp_read, read_buffer, &encountered_newline);
+		
+		add_tmp_to_line(line, tmp_read);
+		if (line == NULL)
+			return (free(tmp_read), NULL);
+		if (encountered_newline == 1)
+			break ;
 	}
-	line[i] = '\0';
-	printf("line: %s\n", line);
-	printf("BUFFER_SIZE: %d\n", BUFFER_SIZE);
-	printf("read_buffer: %s\n", read_buffer);
-	return (read_buffer);
+	if (tmp_read[0] == 0)
+	{
+		return (free(tmp_read), free(line), NULL);
+	}
+	free(tmp_read);
+	return (line);
 }
 
-int	fill_nulls(char *str, int size)
+char	*add_tmp_to_line(char *line, char *tmp_read)
+{
+	char	*new_line;
+	new_line = ft_strjoin(line, tmp_read);
+	if (new_line == NULL)
+		return (free(line), free(tmp_read), NULL);
+	free(line);
+	line = malloc(sizeof(char) * (str_len(new_line) + 1));
+	if (line == NULL)
+		return (free(new_line), free(tmp_read), NULL);
+	ft_strlcpy(line, new_line, str_len(new_line) + 1);
+	free(new_line);
+	return (line);
+}
+
+void	copy_buffer(char *tmp_read, char *read_buffer, int *encountered_newline)
 {
 	int	i;
 
 	i = 0;
-	while (i < size)
+	while (i < BUFFER_SIZE)
 	{
-		str[i] = '\0';
+		tmp_read[i] = read_buffer[i];
+		if (read_buffer[i] == '\n')
+		{
+			*encountered_newline = 1;
+			break ;
+		}
 		i++;
 	}
-	return (i);
 }
 
-int	main(void)
-{
-	int fd;
-	char *line;
-
-	fd = open("test.txt", O_RDONLY);
-	line = get_next_line(fd);
-	printf("line: %s\n", line);
-	close(fd);
-	return (0);
-}

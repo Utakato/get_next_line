@@ -6,7 +6,7 @@
 /*   By: fschipor <fschipor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 17:20:55 by fschipor          #+#    #+#             */
-/*   Updated: 2024/03/30 22:14:40 by fschipor         ###   ########.fr       */
+/*   Updated: 2024/03/31 14:17:17 by fschipor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,7 @@
 char	*get_next_line(int fd);
 int	str_len(char *str);
 char * ft_strjoin(char *s1, char *s2);
+int	ft_strlcpy(char *dst, const char *src, int dstsize);
+void	*ft_calloc(int count, int size);
 
 #endif
