@@ -1,5 +1,5 @@
 
-SOURCES = ../test.c ../get_next_line.c ../get_next_line_utils.c ../get_next_line.h
+SOURCES = test.c ../get_next_line.c ../get_next_line_utils.c ../get_next_line.h
 
 CC = cc
 
