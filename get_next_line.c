@@ -18,43 +18,41 @@ char	*add_tmp_to_line(char *line, char *tmp_read);
 
 char	*get_next_line(int fd)
 {
-	static char	read_buffer[BUFFER_SIZE];
-	char		*tmp_read;
+	static char	read_buffer[BUFFER_SIZE + 1];
 	char		*line;
 	int			encountered_newline;
 	int			bytes_read;
+	int reached_eof;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
+
+	reached_eof = 0;
 	bytes_read = 0;
 	encountered_newline = 0;
-	tmp_read = ft_calloc((BUFFER_SIZE), sizeof(char));
-	if (tmp_read == NULL)
-		return ((NULL));
-	line = malloc(sizeof(char) * (BUFFER_SIZE));
+
+	line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (line == NULL)
-		return (free(tmp_read), NULL);
-	while (bytes_read != -1)
+		return ( NULL);
+	while (reached_eof != 1)
 	{
 		bytes_read = read(fd, read_buffer, BUFFER_SIZE);
-		if (bytes_read == 0)
-		{
-			bytes_read = -1;
-			break ;
-		}
-		copy_buffer(tmp_read, read_buffer, &encountered_newline);
 		
-		add_tmp_to_line(line, tmp_read);
+		read_buffer[bytes_read] = 0;
+
+		add_tmp_to_line(line, read_buffer);
 		if (line == NULL)
-			return (free(tmp_read), NULL);
+			return ( NULL);
 		if (encountered_newline == 1)
 			break ;
+		if (bytes_read < BUFFER_SIZE)
+		{
+			reached_eof = 1;
+			if (bytes_read == 0)
+				return (NULL);
+		}
 	}
-	if (tmp_read[0] == 0)
-	{
-		return (free(tmp_read), free(line), NULL);
-	}
-	free(tmp_read);
+
 	return (line);
 }
 
@@ -62,6 +60,7 @@ char	*add_tmp_to_line(char *line, char *tmp_read)
 {
 	char	*new_line;
 	new_line = ft_strjoin(line, tmp_read);
+	// printf("new_line: %s \n", new_line);
 	if (new_line == NULL)
 		return (free(line), free(tmp_read), NULL);
 	free(line);
@@ -78,7 +77,7 @@ void	copy_buffer(char *tmp_read, char *read_buffer, int *encountered_newline)
 	int	i;
 
 	i = 0;
-	while (i < BUFFER_SIZE)
+	while (i < BUFFER_SIZE && read_buffer[i] != '\0')
 	{
 		tmp_read[i] = read_buffer[i];
 		if (read_buffer[i] == '\n')

@@ -20,13 +20,13 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	i = 0;
 	j = 0;
-	str = (char *)malloc(sizeof(char) * (str_len(s1) + BUFFER_SIZE));
+	str = (char *)malloc(sizeof(char) * (str_len(s1) + str_len(s2) + 1));
 	while (s1[i] != '\0')
 	{
 		str[i] = s1[i];
 		i++;
 	}
-	while (j < BUFFER_SIZE )
+	while (j < BUFFER_SIZE && s2[j] != '\0')
 	{
 		str[i] = s2[j];
 		i++;
