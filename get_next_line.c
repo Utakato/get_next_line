@@ -23,14 +23,14 @@ char	*get_next_line(int fd)
 	char		*tmp_line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) == -1)
-		return (NULL);
+		return (ft_bzero(read_buffer, BUFFER_SIZE), NULL);
+
 	bytes_read = 1;
 	line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (line == NULL)
 		return (NULL);
 	while (bytes_read > 0)
 	{
-
 		if (non_null_char_index(read_buffer) == BUFFER_SIZE)
 		{
 			bytes_read = read(fd, read_buffer, BUFFER_SIZE);
@@ -45,7 +45,6 @@ char	*get_next_line(int fd)
 		line = tmp_line;
 		if (ft_strchr(line, '\n') != -1)
 			break;
-
 	}
 	if (line[0] == '\0')
 	{
