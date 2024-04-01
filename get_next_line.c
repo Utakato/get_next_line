@@ -80,7 +80,7 @@ void	*handle_new_line(char *line, char *read_buffer)
 	cut_line = ft_calloc(i + 1, sizeof(char));
 	if (cut_line == NULL)
 		return (NULL);
-	ft_strlcpy(cut_line, read_buffer, i +1 );
+	ft_strlcpy(cut_line, read_buffer, i + 1);
 	line = ft_strjoin(line, cut_line);
 	ft_bzero(read_buffer, i + 1);
 	return (free(cut_line), line);

@@ -60,12 +60,12 @@ int	ft_strlcpy(char *dst, const char *src, int dstsize)
 	src_len = str_len((char *)src);
 	if (dstsize == 0)
 		return (src_len);
-	while (i < dstsize - 1 && src[i] != '\0' && src[i] != '\n')
+	while (i < dstsize && src[i] != '\0' && src[i] != '\n')
 	{
 		dst[i] = src[i];
 		i++;
 	}
-	dst[i] = '\0';
+	dst[i] = src[i];
 	return (src_len);
 }
 
