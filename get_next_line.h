@@ -6,14 +6,14 @@
 /*   By: fschipor <fschipor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 17:20:55 by fschipor          #+#    #+#             */
-/*   Updated: 2024/03/31 22:08:16 by fschipor         ###   ########.fr       */
+/*   Updated: 2024/04/03 22:26:21 by fschipor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 3
 # endif
 
 # include <stdio.h>

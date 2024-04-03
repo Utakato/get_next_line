@@ -15,7 +15,7 @@ $(NAME): $(SOURCES)
 
 run: $(NAME)
 	@echo "Running... \n"
-	@./test
+	@./a.out
 
 clean: 
 	@echo "Cleaning..."

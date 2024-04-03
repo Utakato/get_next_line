@@ -6,7 +6,7 @@
 /*   By: fschipor <fschipor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 17:20:48 by fschipor          #+#    #+#             */
-/*   Updated: 2024/03/31 22:34:48 by fschipor         ###   ########.fr       */
+/*   Updated: 2024/04/03 19:44:12 by fschipor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	str[i] = s2[j];
 	if (j < BUFFER_SIZE && str[i] != '\0')
 		str[i + 1] = '\0';
-	// free(s1);
-	ft_bzero(s2, j + 1);
+	free(s2);
 	return (str);
 }
 
@@ -47,7 +46,7 @@ int	str_len(char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] != '\0')
+	while (str[i])
 		i++;
 	return (i);
 }
@@ -61,12 +60,12 @@ int	ft_strlcpy(char *dst, const char *src, int dstsize)
 	src_len = str_len((char *)src);
 	if (dstsize == 0)
 		return (src_len);
-	while (i < dstsize - 1 && src[i] != '\0' && src[i] != '\n')
+	while (i < dstsize - 1)
 	{
 		dst[i] = src[i];
 		i++;
 	}
-	dst[i] = src[i];
+	dst[i] = '\0';
 	return (src_len);
 }
 
