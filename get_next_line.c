@@ -11,7 +11,7 @@ char	*get_next_line(int fd)
     char tmp_storage[BUFFER_SIZE + 1];
     char * current_line;
 
-    if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, tmp_storage, 0) == -1)
+    if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) == -1)
         return (NULL);
     while (1) {
         if (read_into_buffer(tmp_storage, fd) == 0)
