@@ -37,7 +37,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	str[i] = s2[j];
 	if (j < BUFFER_SIZE && str[i] != '\0')
 		str[i + 1] = '\0';
-	ft_bzero(s2, j + 1);
+	ft_bzero(s2, j + 1); // mb issue?
 	return (free(s1), str);
 }
 
@@ -60,7 +60,7 @@ int	ft_strlcpy(char *dst, const char *src, int dstsize)
 	src_len = str_len((char *)src);
 	if (dstsize == 0)
 		return (src_len);
-	while (i < dstsize && src[i] != '\0' && src[i] != '\n')
+	while (i < dstsize && src[i] != '\0' )
 	{
 		dst[i] = src[i];
 		i++;
