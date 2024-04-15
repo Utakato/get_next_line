@@ -10,7 +10,9 @@ char	*get_next_line(int fd)
     static char	*permanent_storage;
     char tmp_storage[BUFFER_SIZE + 1];
     char * current_line;
-    
+
+    if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, tmp_storage, 0) == -1)
+        return (NULL);
     while (1) {
         if (read_into_buffer(tmp_storage, fd) == 0)
             break;
